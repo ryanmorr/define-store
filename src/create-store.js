@@ -1,17 +1,17 @@
 export default function createStore(setup) {
-    let value;
+    let value = null;
     const subscribers = [];
     const get = () => value;
-    const set = (val) => {
-        value = val;
-        emit(value);
+    const set = (...args) => {
+        value = args[0];
+        emit(...args);
         return value;
     };
     const subscribe = (subscriber, immediate = false) => {
         if (!subscribers.includes(subscriber)) {
             subscribers.push(subscriber);
             if (immediate === true) {
-                subscriber(value, null);
+                subscriber(value);
             }
             return () => {
                 const index = subscribers.indexOf(subscriber);
@@ -21,12 +21,12 @@ export default function createStore(setup) {
             };
         }
     };
-    const emit = (val) => {
-        subscribers.slice().forEach((subscriber) => subscriber(val));
+    const emit = (...args) => {
+        subscribers.slice().forEach((subscriber) => subscriber(...args));
     };
     const constructor = setup(get, set, subscribe, subscribers);
-    const callback = (val = null) => {
-        const inner = constructor(val);
+    const callback = (...args) => {
+        const inner = constructor(...args);
         inner.subscribe = subscribe;
         return inner;
     };

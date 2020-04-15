@@ -4,7 +4,7 @@ import createStore from '../../src/create-store';
 
 describe('create-store', () => {
     it('should create a basic function-based observable store', () => {
-        const store = createStore((get, set, subscribe, subscribers) => (value) => {
+        const store = createStore((get, set, subscribe, subscribers) => (value = null) => {
             expect(get).to.be.a('function');
             expect(set).to.be.a('function');
             expect(subscribe).to.be.a('function');
@@ -44,7 +44,7 @@ describe('create-store', () => {
     });
 
     it('should create a basic object-based observable store', () => {
-        const store = createStore((get, set) => (value) => {
+        const store = createStore((get, set) => (value = null) => {
             set(value);
             return {
                 get,
@@ -79,5 +79,32 @@ describe('create-store', () => {
         value.set('baz');
         expect(value.get()).to.equal('baz');
         expect(spy.callCount).to.equal(1);
+    });
+
+    it('should support multiple args to set and subscribers', () => {
+        const store = createStore((get, set) => (value = null) => {
+            set(value);
+            return (...args) => {
+                if (args.length > 0) {
+                    set(...args);
+                }
+                return get();
+            };
+        });
+
+        const value = store();
+        expect(value()).to.equal(null);
+        expect(value(1, 2, 3, 4, 5)).to.equal(1);
+        expect(value()).to.equal(1);
+
+        const spy = sinon.spy();
+        value.subscribe(spy);
+
+        value('foo', 'bar', 'baz');
+        expect(value()).to.equal('foo');
+        expect(spy.callCount).to.equal(1);
+        expect(spy.args[0][0]).to.equal('foo');
+        expect(spy.args[0][1]).to.equal('bar');
+        expect(spy.args[0][2]).to.equal('baz');
     });
 });
