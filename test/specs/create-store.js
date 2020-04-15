@@ -4,13 +4,12 @@ import createStore from '../../src/create-store';
 
 describe('create-store', () => {
     it('should create a basic function-based observable store', () => {
-        const store = createStore((get, set, subscribe, subscribers) => (value = null) => {
+        const store = createStore((get, set, subscribe, subscribers) => () => {
             expect(get).to.be.a('function');
             expect(set).to.be.a('function');
             expect(subscribe).to.be.a('function');
             expect(subscribers).to.be.an('array');
 
-            set(value);
             return (...args) => {
                 if (args.length === 1) {
                     set(args[0]);
@@ -44,14 +43,10 @@ describe('create-store', () => {
     });
 
     it('should create a basic object-based observable store', () => {
-        const store = createStore((get, set) => (value = null) => {
-            set(value);
+        const store = createStore((get, set) => () => {
             return {
                 get,
-                set(val) {
-                    set(val);
-                    return get();
-                }
+                set
             };
         });
 
@@ -79,6 +74,30 @@ describe('create-store', () => {
         value.set('baz');
         expect(value.get()).to.equal('baz');
         expect(spy.callCount).to.equal(1);
+    });
+
+    it('should return a default inner value of null', () => {
+        const store = createStore((get, set) => () => {
+            return (...args) => {
+                if (args.length > 0) {
+                    set(...args);
+                }
+                return get();
+            };
+        });
+
+        const value = store();
+        expect(value()).to.equal(null);
+    });
+
+    it('should create a store with an initial value', () => {
+        const store = createStore((get, set) => (value) => {
+            set(value);
+            return get;
+        });
+
+        const value = store('foo');
+        expect(value()).to.equal('foo');
     });
 
     it('should support multiple args to set and subscribers', () => {
