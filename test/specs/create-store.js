@@ -42,4 +42,42 @@ describe('create-store', () => {
         expect(value()).to.equal('baz');
         expect(spy.callCount).to.equal(1);
     });
+
+    it('should create a basic object-based observable store', () => {
+        const store = createStore((get, set) => (value) => {
+            set(value);
+            return {
+                get,
+                set(val) {
+                    set(val);
+                    return get();
+                }
+            };
+        });
+
+        const value = store();
+        expect(value).to.be.an('object');
+        expect(value.get).to.be.a('function');
+        expect(value.set).to.be.a('function');
+        expect(value.get()).to.equal(null);
+        expect(value.set('foo')).to.equal('foo');
+        expect(value.get()).to.equal('foo');
+
+        const spy = sinon.spy();
+        expect(value.subscribe).to.be.a('function');
+        const unsubscribe = value.subscribe(spy);
+        expect(spy.callCount).to.equal(0);
+
+        value.set('bar');
+        expect(value.get()).to.equal('bar');
+        expect(spy.callCount).to.equal(1);
+        expect(spy.args[0][0]).to.equal('bar');
+
+        expect(unsubscribe).to.be.a('function');
+        unsubscribe();
+
+        value.set('baz');
+        expect(value.get()).to.equal('baz');
+        expect(spy.callCount).to.equal(1);
+    });
 });
