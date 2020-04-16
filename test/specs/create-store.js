@@ -3,12 +3,10 @@ import sinon from 'sinon';
 import createStore from '../../src/create-store';
 
 describe('create-store', () => {
-    it('should create a basic function-based observable store', () => {
-        const store = createStore((get, set, subscribe, subscribers) => (value) => {
+    it('should create a function-based store', () => {
+        const store = createStore((get, set) => (value) => {
             expect(get).to.be.a('function');
             expect(set).to.be.a('function');
-            expect(subscribe).to.be.a('function');
-            expect(subscribers).to.be.an('array');
 
             set(value);
             return (...args) => {
@@ -293,7 +291,61 @@ describe('create-store', () => {
         expect(spy2.callCount).to.equal(2);
     });
 
-    it('should create a basic object-based observable store', () => {
+    it('should support internal subscriptions', () => {
+        const spy = sinon.spy();
+
+        const store = createStore((get, set, subscribe) => (value, callback) => {
+            expect(subscribe).to.be.a('function');
+            
+            set(value);
+            subscribe(callback);
+            return (...args) => {
+                if (args.length > 0) {
+                    set(...args);
+                }
+                return get();
+            };
+        });
+
+        const value = store('foo', spy);
+        expect(spy.callCount).to.equal(1);
+        expect(spy.args[0][0]).to.equal('foo');
+
+        value('bar');
+        expect(spy.callCount).to.equal(2);
+        expect(spy.args[1][0]).to.equal('bar');
+    });
+
+    it('should support access to the subscribers array', () => {
+        let subscribersArray;
+
+        const store = createStore((get, set, subscribe, subscribers) => () => {
+            subscribersArray = subscribers;
+            return (...args) => {
+                if (args.length > 0) {
+                    set(...args);
+                }
+                return get();
+            };
+        });
+
+        const value = store('foo');
+
+        expect(subscribersArray).to.be.an('array');
+        expect(subscribersArray.length).to.equal(0);
+
+        const spy = sinon.spy();
+        const unsubscribe = value.subscribe(spy);
+
+        expect(subscribersArray.length).to.equal(1);
+        expect(subscribersArray[0]).to.equal(spy);
+
+        unsubscribe();
+
+        expect(subscribersArray.length).to.equal(0);
+    });
+
+    it('should create an object-based store', () => {
         const store = createStore((get, set) => () => {
             return {
                 get,
@@ -325,56 +377,5 @@ describe('create-store', () => {
         value.set('baz');
         expect(value.get()).to.equal('baz');
         expect(spy.callCount).to.equal(2);
-    });
-
-    it('should support internal subscriptions', () => {
-        const spy = sinon.spy();
-
-        const store = createStore((get, set, subscribe) => (value, callback) => {
-            set(value);
-            subscribe(callback);
-            return (...args) => {
-                if (args.length > 0) {
-                    set(...args);
-                }
-                return get();
-            };
-        });
-
-        const value = store('foo', spy);
-        expect(spy.callCount).to.equal(1);
-        expect(spy.args[0][0]).to.equal('foo');
-
-        value('bar');
-        expect(spy.callCount).to.equal(2);
-        expect(spy.args[1][0]).to.equal('bar');
-    });
-    
-    it('should support access to the subscribers array', () => {
-        let subscribersArray;
-
-        const store = createStore((get, set, subscribe, subscribers) => () => {
-            subscribersArray = subscribers;
-            return (...args) => {
-                if (args.length > 0) {
-                    set(...args);
-                }
-                return get();
-            };
-        });
-
-        const value = store('foo');
-
-        expect(subscribersArray.length).to.equal(0);
-
-        const spy = sinon.spy();
-        const unsubscribe = value.subscribe(spy);
-
-        expect(subscribersArray.length).to.equal(1);
-        expect(subscribersArray[0]).to.equal(spy);
-
-        unsubscribe();
-
-        expect(subscribersArray.length).to.equal(0);
     });
 });
