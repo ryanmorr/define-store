@@ -345,6 +345,39 @@ describe('create-store', () => {
         expect(subscribersArray.length).to.equal(0);
     });
 
+    it('should support customizing the external subscribe function', () => {
+        let customSubscribe = false;
+        const store = createStore((get, set, subscribe) => (value) => {
+            set(value);
+            const callback = (...args) => {
+                if (args.length > 0) {
+                    set(...args);
+                }
+                return get();
+            };
+            callback.subscribe = (callback) => {
+                customSubscribe = true;
+                return subscribe(callback);
+            };
+            return callback;
+        });
+
+        const value = store('foo');
+
+        expect(customSubscribe).to.equal(false);
+
+        const spy = sinon.spy();
+        const unsubscribe = value.subscribe(spy);
+
+        expect(spy.callCount).to.equal(1);
+        expect(customSubscribe).to.equal(true);
+
+        unsubscribe();
+
+        value('bar');
+        expect(spy.callCount).to.equal(1);
+    });
+
     it('should create an object-based store', () => {
         const store = createStore((get, set) => () => {
             return {

@@ -22,7 +22,9 @@ export default function createStore(setup) {
         };
         const constructor = setup(get, set, subscribe, subscribers);
         const store = constructor(...args);
-        store.subscribe = subscribe;
+        if (!store.subscribe) {
+            store.subscribe = subscribe;
+        }
         return store;
     };
 }
