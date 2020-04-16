@@ -5,7 +5,7 @@ export default function createStore(setup) {
         const get = () => value;
         const set = (...args) => {
             value = args[0];
-            emit(...args);
+            subscribers.slice().forEach((subscriber) => subscriber(...args));
             return value;
         };
         const subscribe = (callback) => {
@@ -19,9 +19,6 @@ export default function createStore(setup) {
                     }
                 };
             }
-        };
-        const emit = (...args) => {
-            subscribers.slice().forEach((subscriber) => subscriber(...args));
         };
         const constructor = setup(get, set, subscribe, subscribers);
         const store = constructor(...args);
