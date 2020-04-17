@@ -1,11 +1,11 @@
 export default function createStore(setup) {
-    return (...args) => {
+    return (...initArgs) => {
         let value;
         const subscribers = [];
         const get = () => value;
-        const set = (...args) => {
-            value = args[0];
-            subscribers.slice().forEach((subscriber) => subscriber(...args));
+        const set = (...setArgs) => {
+            value = setArgs[0];
+            subscribers.slice().forEach((subscriber) => subscriber(...setArgs));
             return value;
         };
         const subscribe = (callback) => {
@@ -21,7 +21,7 @@ export default function createStore(setup) {
             }
         };
         const constructor = setup(get, set, subscribe, subscribers);
-        const store = constructor(...args);
+        const store = constructor(...initArgs);
         if (!store.subscribe) {
             store.subscribe = subscribe;
         }
