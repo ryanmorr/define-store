@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import createStore from '../../src/create-store';
+import createStore from '../../src/create-store.js';
 
 describe('create-store', () => {
     it('should create a function-based store', () => {
