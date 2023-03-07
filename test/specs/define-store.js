@@ -411,4 +411,21 @@ describe('define-store', () => {
         expect(value.get()).to.equal('baz');
         expect(spy.callCount).to.equal(2);
     });
+
+    it('should support implicit type conversions', async () => {
+        const store = defineStore((get, set) => (value) => {
+            set(value);
+            return {
+                get,
+                set
+            };
+        });
+
+        const foo = store(10);
+        
+        expect(foo.toString()).to.equal('10');
+        expect(foo.valueOf()).to.equal(10);
+        expect(foo.toJSON()).to.equal(10);
+        expect(await foo).to.equal(10);
+    });
 });

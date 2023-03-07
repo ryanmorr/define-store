@@ -25,6 +25,10 @@ export default function defineStore(setup) {
         if (!store.subscribe) {
             store.subscribe = subscribe;
         }
+        store.then = (resolve) => resolve(get());
+        store.toString = () => String(get());
+        store.toJSON = get;
+        store.valueOf = get;
         return store;
     };
 }
