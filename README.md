@@ -4,7 +4,7 @@
 [![License][license-image]][license-url]
 [![Build Status][build-image]][build-url]
 
-> Composable stores for reactive programming
+> Define custom stores for reactive programming
 
 ## Install
 
@@ -75,20 +75,26 @@ const store = defineStore((get, set, subscribe, subscribers) => {
 });
 
 // Create an instance of the store with an initial value
-const value = store('foo');
+const value = store(100);
 
 // Add a subscriber
 const subscriber = value.subscribe((newValue) => console.log(newValue));
 
 // Get the stored value
-value.get(); //=> "foo"
+value.get(); //=> 100
 // Set the stored value
-value.set('bar');
+value.set(200);
 // Get the new stored value
-value.get(); //=> "bar"
+value.get(); //=> 200
 
 // Remove subscriber
 subscriber.unsubscribe();
+
+// Supports implicit type conversions
+value.toString(); //=> "200"
+value.valueOf(); //=> 200
+value.toJSON(); //=> 200
+await value; //=> 200
 ```
 
 ## Examples
@@ -127,7 +133,7 @@ const computed = defineStore((get, set) => (deps, callback) => {
 
 const firstName = store('John');
 const lastName = store('Doe');
-const fullName = computed([firstName, lastName], ([f, l]) => `${f} ${l}`);
+const fullName = computed([firstName, lastName], ([first, last]) => `${first} ${last}`);
 
 const subscribe = fullName.subscribe((name) => console.log(name));
 
