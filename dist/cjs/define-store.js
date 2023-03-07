@@ -1,0 +1,2 @@
+/*! @ryanmorr/define-store v1.0.0 | https://github.com/ryanmorr/define-store */
+"use strict";module.exports=function(e){return(...t)=>{let r;const s=[],n=()=>r,i=e=>{if(!s.includes(e))return s.push(e),e(r),()=>{const t=s.indexOf(e);-1!==t&&s.splice(t,1)}},u=e(n,((...e)=>(r=e[0],s.slice().forEach((t=>t(...e))),r)),i,s)(...t);return u.subscribe||(u.subscribe=i),u.then=e=>e(n()),u.toString=()=>String(n()),u.toJSON=n,u.valueOf=n,u}};
