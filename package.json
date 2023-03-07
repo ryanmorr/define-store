@@ -1,12 +1,12 @@
 {
-  "name": "@ryanmorr/create-store",
-  "description": "Composable stores for reactive programming",
+  "name": "@ryanmorr/define-store",
+  "description": "Define custom stores for reactive programming",
   "version": "0.1.0",
   "license": "Unlicense",
   "author": "Ryan Morr",
-  "homepage": "https://github.com/ryanmorr/create-store",
-  "repository": "github:ryanmorr/create-store",
-  "bugs": "https://github.com/ryanmorr/create-store/issues",
+  "homepage": "https://github.com/ryanmorr/define-store",
+  "repository": "github:ryanmorr/define-store",
+  "bugs": "https://github.com/ryanmorr/define-store/issues",
   "keywords": [
     "javascript",
     "reactive",
@@ -14,14 +14,14 @@
     "observable"
   ],
   "type": "module",
-  "main": "dist/cjs/create-store.js",
-  "module": "dist/esm/create-store.js",
-  "browser": "dist/umd/create-store.js",
+  "main": "dist/cjs/define-store.js",
+  "module": "dist/esm/define-store.js",
+  "browser": "dist/umd/define-store.js",
   "exports": {
     ".": {
-      "browser": "./dist/umd/create-store.js",
-      "import": "./dist/esm/create-store.js",
-      "require": "./dist/cjs/create-store.js"
+      "browser": "./dist/umd/define-store.js",
+      "import": "./dist/esm/define-store.js",
+      "require": "./dist/cjs/define-store.js"
     }
   },
   "files": [

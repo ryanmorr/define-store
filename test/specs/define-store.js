@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import createStore from '../../src/create-store.js';
+import defineStore from '../../src/define-store.js';
 
-describe('create-store', () => {
+describe('define-store', () => {
     it('should create a function-based store', () => {
-        const store = createStore((get, set) => (value) => {
+        const store = defineStore((get, set) => (value) => {
             expect(get).to.be.a('function');
             expect(set).to.be.a('function');
 
@@ -25,7 +25,7 @@ describe('create-store', () => {
     });
 
     it('should return a default inner value of undefined', () => {
-        const store = createStore((get, set) => () => {
+        const store = defineStore((get, set) => () => {
             return (...args) => {
                 if (args.length > 0) {
                     set(...args);
@@ -39,7 +39,7 @@ describe('create-store', () => {
     });
 
     it('should support subscribers to be called immediately and when the value changes', () => {
-        const store = createStore((get, set) => (value) => {
+        const store = defineStore((get, set) => (value) => {
             set(value);
             return (...args) => {
                 if (args.length > 0) {
@@ -79,7 +79,7 @@ describe('create-store', () => {
     });
 
     it('should not allow the same function to subscribe more than once', () => {
-        const store = createStore((get, set) => (value) => {
+        const store = defineStore((get, set) => (value) => {
             set(value);
             return (...args) => {
                 if (args.length > 0) {
@@ -105,7 +105,7 @@ describe('create-store', () => {
     });
 
     it('should remove a subscriber', () => {
-        const store = createStore((get, set) => (value) => {
+        const store = defineStore((get, set) => (value) => {
             set(value);
             return (...args) => {
                 if (args.length > 0) {
@@ -134,7 +134,7 @@ describe('create-store', () => {
     });
 
     it('should allow subscribers to remove themselves without disrupting others', () => {
-        const store = createStore((get, set) => (value) => {
+        const store = defineStore((get, set) => (value) => {
             set(value);
             return (...args) => {
                 if (args.length > 0) {
@@ -186,7 +186,7 @@ describe('create-store', () => {
     });
 
     it('should return the new value within a subscriber', () => {
-        const store = createStore((get, set) => (value) => {
+        const store = defineStore((get, set) => (value) => {
             set(value);
             return (...args) => {
                 if (args.length > 0) {
@@ -214,7 +214,7 @@ describe('create-store', () => {
     });
 
     it('should support multiple args to set and subscribers', () => {
-        const store = createStore((get, set) => () => {
+        const store = defineStore((get, set) => () => {
             return (...args) => {
                 if (args.length > 0) {
                     set(...args);
@@ -244,7 +244,7 @@ describe('create-store', () => {
     });
 
     it('should support multiple instances of a store', () => {
-        const store = createStore((get, set) => (value) => {
+        const store = defineStore((get, set) => (value) => {
             set(value);
             return (...args) => {
                 if (args.length > 0) {
@@ -294,7 +294,7 @@ describe('create-store', () => {
     it('should support internal subscriptions', () => {
         const spy = sinon.spy();
 
-        const store = createStore((get, set, subscribe) => (value, callback) => {
+        const store = defineStore((get, set, subscribe) => (value, callback) => {
             expect(subscribe).to.be.a('function');
             
             set(value);
@@ -319,7 +319,7 @@ describe('create-store', () => {
     it('should support access to the subscribers array', () => {
         let subscribersArray;
 
-        const store = createStore((get, set, subscribe, subscribers) => () => {
+        const store = defineStore((get, set, subscribe, subscribers) => () => {
             subscribersArray = subscribers;
             return (...args) => {
                 if (args.length > 0) {
@@ -347,7 +347,7 @@ describe('create-store', () => {
 
     it('should support customizing the external subscribe function', () => {
         let customSubscribe = false;
-        const store = createStore((get, set, subscribe) => (value) => {
+        const store = defineStore((get, set, subscribe) => (value) => {
             set(value);
             const callback = (...args) => {
                 if (args.length > 0) {
@@ -379,7 +379,7 @@ describe('create-store', () => {
     });
 
     it('should create an object-based store', () => {
-        const store = createStore((get, set) => () => {
+        const store = defineStore((get, set) => () => {
             return {
                 get,
                 set

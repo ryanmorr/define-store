@@ -1,17 +1,17 @@
-# create-store
+# define-store
 
 [![Version Badge][version-image]][project-url]
-[![Build Status][build-image]][build-url]
 [![License][license-image]][license-url]
+[![Build Status][build-image]][build-url]
 
 > Composable stores for reactive programming
 
 ## Install
 
-Download the [CJS](https://github.com/ryanmorr/create-store/raw/master/dist/create-store.cjs.js), [ESM](https://github.com/ryanmorr/create-store/raw/master/dist/create-store.esm.js), [UMD](https://github.com/ryanmorr/create-store/raw/master/dist/create-store.umd.js) versions or install via NPM:
+Download the [CJS](https://github.com/ryanmorr/define-store/raw/master/dist/cjs/define-store.js), [ESM](https://github.com/ryanmorr/define-store/raw/master/dist/esm/define-store.js), [UMD](https://github.com/ryanmorr/define-store/raw/master/dist/umd/define-store.js) versions or install via NPM:
 
 ```sh
-npm install @ryanmorr/create-store
+npm install @ryanmorr/define-store
 ```
 
 ## Usage
@@ -19,12 +19,12 @@ npm install @ryanmorr/create-store
 Easily create customizable observable stores that allow you control every aspect of it's behavior and API, including how it's created, how and when it's internal value is read and written, and how subscribers are handled. This allows you to create stores with specific functionality and still maintain interoperability with different reactive libraries.
 
 ```javascript
-import createStore from '@ryanmorr/create-store';
+import defineStore from '@ryanmorr/define-store';
 
 // Define a store with a callback function that is provided a function to get the
 // internal value, a function to set the internal value, a function to add
 // subscribers, and the subscribers array as the 4 parameters
-const store = createStore((get, set, subscribe, subscribers) => {
+const store = defineStore((get, set, subscribe, subscribers) => {
 
     // Return a function for creating store instances with custom arguments
     return (initialValue) => {
@@ -96,7 +96,7 @@ subscriber.unsubscribe();
 You can make all kinds of different observable stores, for example, here's a basic function-based store:
 
 ```javascript
-const store = createStore((get, set) => (value) => {
+const store = defineStore((get, set) => (value) => {
     set(value);
     return (...args) => {
         if (args.length === 1) {
@@ -118,7 +118,7 @@ value(); //=> "bar"
 And how about a computed store to go with it:
 
 ```javascript
-const computed = createStore((get, set) => (deps, callback) => {
+const computed = defineStore((get, set) => (deps, callback) => {
     const setValue = () => set(callback(deps.map((dep) => dep())));
     deps.forEach((dep) => dep.subscribe(setValue));
     setValue();
@@ -141,7 +141,7 @@ fullName(); //=> "Jane Smith"
 Or maybe a simple toggle store:
 
 ```javascript
-const toggle = createStore((get, set) => (on = false) => {
+const toggle = defineStore((get, set) => (on = false) => {
     set(on);
     return {
         isOn: get,
@@ -166,7 +166,7 @@ toggler.isOn(); //=> true
 Don't forget your Redux-style reducer store:
 
 ```javascript
-const reduce = createStore((get, set) => (reducer, initialState) => {
+const reduce = defineStore((get, set) => (reducer, initialState) => {
     set(initialState);
     return {
         getState: get,
@@ -200,9 +200,9 @@ counter.getState(); //=> {count: 0}
 
 This project is dedicated to the public domain as described by the [Unlicense](http://unlicense.org/).
 
-[project-url]: https://github.com/ryanmorr/create-store
-[version-image]: https://badge.fury.io/gh/ryanmorr%2Fcreate-store.svg
-[build-url]: https://travis-ci.org/ryanmorr/create-store
-[build-image]: https://travis-ci.org/ryanmorr/create-store.svg
-[license-image]: https://img.shields.io/badge/license-Unlicense-blue.svg
+[project-url]: https://github.com/ryanmorr/define-store
+[version-image]: https://img.shields.io/github/package-json/v/ryanmorr/define-store?color=blue&style=flat-square
+[build-url]: https://github.com/ryanmorr/define-store/actions
+[build-image]: https://img.shields.io/github/actions/workflow/status/ryanmorr/define-store/node.js.yml?style=flat-square
+[license-image]: https://img.shields.io/github/license/ryanmorr/define-store?color=blue&style=flat-square
 [license-url]: UNLICENSE

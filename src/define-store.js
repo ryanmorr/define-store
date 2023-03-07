@@ -1,4 +1,4 @@
-export default function createStore(setup) {
+export default function defineStore(setup) {
     return (...initArgs) => {
         let value;
         const subscribers = [];
