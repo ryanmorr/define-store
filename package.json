@@ -5,8 +5,11 @@
   "license": "Unlicense",
   "author": "Ryan Morr",
   "homepage": "https://github.com/ryanmorr/define-store",
-  "repository": "github:ryanmorr/define-store",
   "bugs": "https://github.com/ryanmorr/define-store/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryanmorr/define-store.git"
+  },
   "keywords": [
     "javascript",
     "reactive",
