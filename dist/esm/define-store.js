@@ -1,2 +1,2 @@
-/*! @ryanmorr/define-store v1.0.0 | https://github.com/ryanmorr/define-store */
+/*! @ryanmorr/define-store v1.0.1 | https://github.com/ryanmorr/define-store */
 function e(e){return(...t)=>{let n;const r=[],s=()=>n,i=e=>{if(!r.includes(e))return r.push(e),e(n),()=>{const t=r.indexOf(e);-1!==t&&r.splice(t,1)}},u=e(s,((...e)=>(n=e[0],r.slice().forEach((t=>t(...e))),n)),i,r)(...t);return u.subscribe||(u.subscribe=i),u.then=e=>e(s()),u.toString=()=>String(s()),u.toJSON=s,u.valueOf=s,u}}export{e as default};

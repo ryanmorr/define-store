@@ -1,2 +1,2 @@
-/*! @ryanmorr/define-store v1.0.0 | https://github.com/ryanmorr/define-store */
+/*! @ryanmorr/define-store v1.0.1 | https://github.com/ryanmorr/define-store */
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?module.exports=n():"function"==typeof define&&define.amd?define(n):(e="undefined"!=typeof globalThis?globalThis:e||self).defineStore=n()}(this,(function(){"use strict";return function(e){return(...n)=>{let t;const i=[],o=()=>t,f=e=>{if(!i.includes(e))return i.push(e),e(t),()=>{const n=i.indexOf(e);-1!==n&&i.splice(n,1)}},s=e(o,((...e)=>(t=e[0],i.slice().forEach((n=>n(...e))),t)),f,i)(...n);return s.subscribe||(s.subscribe=f),s.then=e=>e(o()),s.toString=()=>String(o()),s.toJSON=o,s.valueOf=o,s}}}));
